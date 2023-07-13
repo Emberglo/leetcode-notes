@@ -77,13 +77,16 @@ function memoize(fn) {
     let cache = {};
     return function(...args) {
         for (arg of args) {
+
             if (arg in cache) {
                 return cache[arg];
-            } else {
-                let result = fn(...args);
-                cache[arg] = result;
-                return result;
             }
+
+            let result = fn(...args);
+
+            cache[arg] = result;
+
+            return result;
         }
     }
 }
@@ -102,3 +105,25 @@ function memoize(fn) {
 
 
  // Just adding this to keep track of memoization. I haven't had to do this before.
+
+ // Above Solution did not work for all test cases. I think it has to due with not converting the arguments to strings for cacheing.
+
+ // below solution works for all test cases. I am pretty sure the keys needed to be stringified and were messing up some test cases.
+
+ function memoize(fn) {
+    let cache = {};
+
+    return function(...args) {
+        const arg = JSON.stringify(args);
+
+        if (arg in cache) {
+            return cache[arg];
+        }
+
+        let result = fn(...args);
+
+        cache[arg] = result;
+        
+        return result;
+    }
+}
